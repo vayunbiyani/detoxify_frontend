@@ -146,7 +146,6 @@ const RenderDashboard = ({ dashboardData, abstainChannels, setAbstainChannels, a
     setAbstainChannels: React.Dispatch<React.SetStateAction<string[]>>,
     abstainNouns: string[],
     setAbstainNouns: React.Dispatch<React.SetStateAction<string[]>>
-    detoxifyButtonHandler: any
 }) => {
     console.log("RenderDashboard");
     if (!dashboardData) {
@@ -166,7 +165,7 @@ const RenderDashboard = ({ dashboardData, abstainChannels, setAbstainChannels, a
     }
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        const options = { day: 'numeric', month: 'long' };
+        const options = { day: 'numeric', month: 'numeric' } as Intl.DateTimeFormatOptions;
         return date.toLocaleDateString('en-US', options);
     };
 
