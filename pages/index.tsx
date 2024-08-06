@@ -203,7 +203,7 @@ const HomePage = () => {
     const [file, setFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteIndex, setQuoteIndex] = useState(0);
-    const [dashboardData, setDashboardData] = useState<any>();
+    const [dashboardData, setDashboardData] = useState<any>(null);
     const [abstainChannels, setAbstainChannels] = useState<string[]>([]);
     const [abstainNouns, setAbstainNouns] = useState<string[]>([]);
 
@@ -222,6 +222,7 @@ const HomePage = () => {
     };
 
     const handleUpload = async (endpoint: string) => {
+        console.log("handleUpload");
         if (!file) return;
 
         setIsLoading(true);
@@ -229,7 +230,7 @@ const HomePage = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`http://3.108.4.128:8080${endpoint}`, formData, {
+            const response = await axios.post(`http://3.108.4.128:8080/${endpoint}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -239,6 +240,7 @@ const HomePage = () => {
             setIsLoading(false);
         } catch (error) {
             console.error(error);
+            alert('An error occurred. Please try again.');
             setIsLoading(false);
         }
     };
@@ -340,19 +342,22 @@ const HomePage = () => {
     }
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.heading}>Upload YouTube Analytics File</h1>
-            <input className={styles.fileInput} type="file" onChange={handleFileChange} />
-            <div>
-                <button className={styles.button} onClick={() => handleUpload('metrics')}>Get Metrics</button>
+
+        <div style={{ overflow: 'scroll', flex: 1 }}>
+            <div className={styles.container}>
+                <h1 className={styles.heading}>Upload YouTube Analytics File</h1>
+                <input className={styles.fileInput} type="file" onChange={handleFileChange} />
+                <div>
+                    <button className={styles.button} onClick={() => handleUpload('metrics')}>Get Metrics</button>
+                </div>
+                {isLoading && renderQuote()}
+                {dashboardData && <RenderDashboard dashboardData={dashboardData}
+                    abstainChannels={abstainChannels}
+                    setAbstainChannels={setAbstainChannels}
+                    abstainNouns={abstainNouns}
+                    setAbstainNouns={setAbstainNouns}
+                />}
             </div>
-            {isLoading && renderQuote()}
-            {dashboardData && <RenderDashboard dashboardData={dashboardData}
-                abstainChannels={abstainChannels}
-                setAbstainChannels={setAbstainChannels}
-                abstainNouns={abstainNouns}
-                setAbstainNouns={setAbstainNouns}
-            />}
         </div>
     );
 };
