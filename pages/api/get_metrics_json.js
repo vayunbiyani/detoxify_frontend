@@ -18,6 +18,7 @@ export default async function handler(req, res) {
     try {
       const response = await axios.post(`http://4.224.105.208:443/${endpoint}`, formData, {
         headers: formData.getHeaders(),  // axios will handle the multipart/form-data headers
+        timeout: 120000,  // Set timeout to 120 seconds
       });
       
       res.status(200).json(response.data);

@@ -295,7 +295,7 @@ const HomePage = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`https://4.224.105.208:443/${endpoint}`, formData, {
+            const response = await axios.post(`http://4.224.105.208:8080/${endpoint}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

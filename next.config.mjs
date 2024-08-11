@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    serverRuntimeConfig: {
-        bodySizeLimit: '100mb' // Set desired value here
-    }
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb'
+    },
+  },
+  serverRuntimeConfig: {
+    bodySizeLimit: '100mb' // This is used for server-side configurations
+  },
 };
 
 export default nextConfig;
