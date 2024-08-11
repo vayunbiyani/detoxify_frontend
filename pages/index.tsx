@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Line, LineChart, XAxis, YAxis } from 'recharts';
 import styles from './HomePage.module.css';  // Importing the CSS module
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+    weight: ['400'],
+    display: 'swap',
+    style: 'normal',
+    subsets: ['latin'],
+
+});
 
 
-// Rest of the code...
-
-
-// Line.register(registerables);
 
 const VideosPerHour = ({ videos_per_hour }: { videos_per_hour: any[] }) => {
     if (!videos_per_hour) {
@@ -203,11 +208,71 @@ const HomePage = () => {
     const [file, setFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteIndex, setQuoteIndex] = useState(0);
-    const [dashboardData, setDashboardData] = useState<any>(null);
+    const [dashboardData, setDashboardData] = useState<any>()
+    // const [dashboardData, setDashboardData] = useState<any>({
+    //     common_proper_nouns: [
+    //         {
+    //             proper_noun: "Noun 1",
+    //             weighted_count: 1
+    //         },
+    //         {
+    //             proper_noun: "Noun 2",
+    //             weighted_count: 2
+    //         },
+    //         {
+    //             proper_noun: "Noun 3",
+    //             weighted_count: 3
+    //         },
+    //     ],
+    //     top_channels: [
+    //         {
+    //             channel_title: "Channel 1",
+    //             count: 1
+    //         },
+    //         {
+    //             channel_title: "Channel 2",
+    //             count: 2
+    //         },
+    //         {
+    //             channel_title: "Channel 3",
+    //             count: 3
+    //         },
+    //     ],
+    //     videos_per_hour: [
+    //         {
+    //             hour: 0,
+    //             count: 1
+    //         },
+    //         {
+    //             hour: 1,
+    //             count: 2
+    //         },
+    //         {
+    //             hour: 2,
+    //             count: 3
+    //         },
+    //     ],
+    //     videos_per_week: [
+    //         {
+    //             week_start: "2021-01-01",
+    //             count: 1
+    //         },
+    //         {
+    //             week_start: "2021-01-08",
+    //             count: 2
+    //         },
+    //         {
+    //             week_start: "2021-01-15",
+    //             count: 3
+    //         },
+    //     ],
+    // });
     const [abstainChannels, setAbstainChannels] = useState<string[]>([]);
     const [abstainNouns, setAbstainNouns] = useState<string[]>([]);
 
     const [isClient, setIsClient] = useState(false);
+
+
 
     useEffect(() => {
         setIsClient(true);
@@ -230,7 +295,7 @@ const HomePage = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`http://3.108.4.128:8080/${endpoint}`, formData, {
+            const response = await axios.post(`http://4.224.105.208:443/${endpoint}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -290,49 +355,6 @@ const HomePage = () => {
         };
     }, [isLoading]);
 
-    useEffect(() => {
-        const foo = () => {
-
-            console.log("foo");
-
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js';
-            document.body.appendChild(script);
-
-            const script2 = document.createElement('script');
-            script2.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js';
-            document.body.appendChild(script2);
-
-            script2.onload = () => {
-                const script3 = document.createElement('script');
-                script3.innerHTML = `
-                VANTA.NET({
-                    el: "body",
-                    mouseControls: true,
-                    touchControls: true,
-                    gyroControls: false,
-                    minHeight: 200.00,
-                    minWidth: 200.00,
-                    scale: 1.00,
-                    scaleMobile: 1.00,
-                    color: 0xa168b9,
-                    backgroundColor: 0x20002,
-                    points: 14.00,
-                    maxDistance: 24.00,
-                    spacing: 13.00
-                });
-            `;
-                document.body.appendChild(script3);
-
-                return () => {
-                    document.body.removeChild(script);
-                    document.body.removeChild(script2);
-                    document.body.removeChild(script3);
-                };
-            };
-        };
-        foo();
-    }, []);
 
 
     console.log("rendered");
@@ -343,13 +365,16 @@ const HomePage = () => {
 
     return (
 
-        <div style={{ overflow: 'scroll', flex: 1 }}>
+        <div style={{ overflow: 'scroll', flex: 1 , fontFamily: poppins.style.fontFamily, padding: '10px 0', minHeight:"100vh" }}>
+            
             <div className={styles.container}>
-                <h1 className={styles.heading}>Upload YouTube Analytics File</h1>
-                <input className={styles.fileInput} type="file" onChange={handleFileChange} />
-                <div>
-                    <button className={styles.button} onClick={() => handleUpload('metrics')}>Get Metrics</button>
-                </div>
+               {!dashboardData && <><h1 className={styles.heading}>Upload YouTube Analytics File</h1>
+                    <input className={styles.fileInput} type="file" onChange={handleFileChange} />
+                    <div>
+                        <button className={styles.button} onClick={() => handleUpload('get_metrics_json')}>Get Metrics</button>
+                    </div>
+                </>}
+                {dashboardData && <h1 className={styles.heading}>Dashboard</h1>}
                 {isLoading && renderQuote()}
                 {dashboardData && <RenderDashboard dashboardData={dashboardData}
                     abstainChannels={abstainChannels}
